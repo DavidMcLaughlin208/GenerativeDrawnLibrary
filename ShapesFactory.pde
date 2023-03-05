@@ -10,13 +10,13 @@ public class ShapesFactory {
     shapes.add(line);
   }
   
-  public void circleFromVector(PVector pos, float radius, boolean animated) {
-    DrawnEllipse circle = new DrawnEllipse(pos, radius, animated);
+  public void circleFromVector(PVector pos, float radius, boolean animated, boolean shaded) {
+    DrawnEllipse circle = new DrawnEllipse(pos, radius, animated, shaded);
     shapes.add(circle);
   }
   
-  public void ellipseFromVector(PVector pos, float xRadius, float yRadius, boolean animated) {
-    DrawnEllipse ellipse = new DrawnEllipse(pos, xRadius, yRadius, animated);
+  public void ellipseFromVector(PVector pos, float xRadius, float yRadius, boolean animated, boolean shaded) {
+    DrawnEllipse ellipse = new DrawnEllipse(pos, xRadius, yRadius, animated, shaded);
     shapes.add(ellipse);
   }
   
