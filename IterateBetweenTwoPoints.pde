@@ -35,7 +35,7 @@ void drawnLine(int x1, int y1, int x2, int y2) {
         int currentY = y1 + (yIncrease * yModifier);
         int currentX = x1 + (xIncrease * xModifier);
         stroke(random(0, 50));
-        ellipse(currentX, currentY, random(0.1, 3), random(0.1, 3));
+        ellipse(currentX, currentY, random(0.7, 3), random(0.7, 3));
         
     }
 }
