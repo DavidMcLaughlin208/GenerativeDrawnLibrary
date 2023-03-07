@@ -8,10 +8,6 @@ public enum Direction {
   SW,
   W,
   NW;
-  
-  public static Direction getRandomDirection() {
-    return Direction.N;
-  }
 }
     
     
@@ -20,12 +16,44 @@ public class Matrix {
   private int buffer;
   private int cells;
   ArrayList<ArrayList<Cell>> matrix = new ArrayList<>();
+  HashMap<Cell, Direction> cellsToPropagate = new HashMap<Cell, Direction>();
+  HashMap<Cell, Direction> cellsToPropagateNext = new HashMap<Cell, Direction>();
+  ArrayList<Cell> cellsToDraw = new ArrayList<Cell>();
+  HashMap<Direction, PVector> neighborOffset = new HashMap<Direction, PVector>();
+  HashMap<Direction, Direction> neighborDirection = new HashMap<Direction, Direction>();
+  private ArrayList<Direction> dirList = new ArrayList<Direction>();
   
   public Matrix(int cellLength) {
       this.cellSide = cellLength;
       this.cells = height / this.cellSide;
       this.buffer = (height % this.cells) / 2;
       setupMatrix();
+      neighborOffset.put(Direction.N, new PVector(0, -1));
+      neighborOffset.put(Direction.NE, new PVector(1, -1));
+      neighborOffset.put(Direction.E, new PVector(1, 0));
+      neighborOffset.put(Direction.SE, new PVector(1, 1));
+      neighborOffset.put(Direction.S, new PVector(0, 1));
+      neighborOffset.put(Direction.SW, new PVector(-1, 1));
+      neighborOffset.put(Direction.W, new PVector(-1, 0));
+      neighborOffset.put(Direction.NW, new PVector(-1, -1));
+      
+      neighborDirection.put(Direction.N, Direction.S);
+      neighborDirection.put(Direction.NE, Direction.SW);
+      neighborDirection.put(Direction.E, Direction.W);
+      neighborDirection.put(Direction.SE, Direction.NW);
+      neighborDirection.put(Direction.S, Direction.N);
+      neighborDirection.put(Direction.SW, Direction.NE);
+      neighborDirection.put(Direction.W, Direction.E);
+      neighborDirection.put(Direction.NW, Direction.SE);
+      
+      dirList.add(Direction.N);
+      dirList.add(Direction.NE);
+      dirList.add(Direction.E);
+      dirList.add(Direction.SE);
+      dirList.add(Direction.S);
+      dirList.add(Direction.SW);
+      dirList.add(Direction.W);
+      dirList.add(Direction.NW);
   }
   
   private void setupMatrix() {
@@ -46,6 +74,10 @@ public class Matrix {
     }
     return null;
   }
+  
+    public Direction getRandomDirection() {
+      return dirList.get((int) Math.floor(random(dirList.size())));
+    }
   
   public class Cell {
     public int matrixX;
@@ -99,75 +131,48 @@ public class Matrix {
     }
     
     public void propagate(Direction entryPoint) {
-      Direction dir = Direction.getRandomDirection();
+      Direction dir1 = this.matrix.getRandomDirection();
+      Direction dir2 = this.matrix.getRandomDirection();
       ArrayList<Direction> connectionList = new ArrayList<Direction>();
-      connectionList.add(dir);
+      connectionList.add(dir1);
+      //connectionList.add(dir2);  
       this.connections.put(entryPoint, connectionList);
-      Cell neighboringCell = this.getNeighboringCell(dir);
-      if (neighboringCell != null) {
-        neighboringCell.propagate(Direction.S);  
+      for (Direction dir : connectionList) {
+        Cell neighboringCell = this.getNeighboringCell(dir);
+        if (neighboringCell != null) {
+          cellsToPropagateNext.put(neighboringCell, getNeighborEntryPoint(dir));  
+        }
       }
     }
     
+    private Direction getNeighborEntryPoint(Direction dir) {
+      return this.matrix.neighborDirection.get(dir);  
+    }
+    
     private Cell getNeighboringCell(Direction dir) {
-      return this.matrix.get(this.matrixX, this.matrixY - 1);  
+      PVector offset = this.matrix.neighborOffset.get(dir);
+      return this.matrix.get(this.matrixX + (int) offset.x, this.matrixY + (int) offset.y);  
     }
   }
   
   public void seedPath() {
     Cell center = this.matrix.get(this.cells/2).get(this.cells/2);
-    center.propagate(Direction.Center);
+    cellsToPropagate.put(center, Direction.Center);
   }
   
-  public void draw(ShapesFactory sf) {
-    for (int y = 0; y < this.cells; y++) {
-      for (int x = 0; x < this.cells; x++) {
-        Cell cell = this.matrix.get(y).get(x);
-        for (Direction dir : cell.connections.keySet()) {
-          ArrayList<Direction> connex = cell.connections.get(dir);
-          for (Direction connectingDir : connex) {
-            sf.lineFromVectors(cell.directions.get(dir), cell.directions.get(connectingDir), true);  
-          }
+  public void step(ShapesFactory sf) {
+    for (Cell cell : cellsToPropagate.keySet()) {
+      cell.propagate(cellsToPropagate.get(cell));
+      for (Direction dir : cell.connections.keySet()) {
+        ArrayList<Direction> connex = cell.connections.get(dir);
+        for (Direction connectingDir : connex) {
+          sf.lineFromVectors(cell.directions.get(dir), cell.directions.get(connectingDir), true);  
         }
       }
     }
+    cellsToPropagate.clear();
+    cellsToPropagateNext.keySet().forEach(k -> cellsToPropagate.put(k, cellsToPropagateNext.get(k)));
+    cellsToPropagateNext.clear();
   }
-  
-  //public void draw(ShapesFactory sf) {
-  //  for (int y = 0; y < this.cells; y++) {
-  //    ArrayList<HashMap<String, Boolean>> row = matrix.get(y);
-  //    for (int x = 0; x < this.cells; x++) {
-  //      boolean n = row.get(x).get("N");
-  //      boolean e = row.get(x).get("E");
-  //      boolean s = row.get(x).get("S");
-  //      boolean w = row.get(x).get("W");
-  //      PVector nVec = new PVector(this.buffer + (x) * this.cellSide + this.cellSide/2, this.buffer + (y) * this.cellSide);
-  //      PVector eVec = new PVector(this.buffer + (x) * this.cellSide + this.cellSide, this.buffer + (y) * this.cellSide + this.cellSide/2);
-  //      PVector sVec = new PVector(this.buffer + (x) * this.cellSide + this.cellSide/2, this.buffer + (y) * this.cellSide + this.cellSide);
-  //      PVector wVec = new PVector(this.buffer + (x) * this.cellSide, this.buffer + (y) * this.cellSide + this.cellSide/2);
-  //      if (n && e) {
-  //        sf.lineFromVectors(nVec.copy(), eVec.copy(), true);  
-  //      }
-  //      if (n && s) {
-  //        sf.lineFromVectors(nVec.copy(), sVec.copy(), true);
-  //      }
-  //      if (n && w) {
-  //        sf.lineFromVectors(nVec.copy(), wVec.copy(), true); 
-  //      }
-  //      if (e && s) {
-  //        sf.lineFromVectors(eVec.copy(), sVec.copy(), true);  
-  //      }
-  //      if (e && w) {
-  //        sf.lineFromVectors(eVec.copy(), wVec.copy(), true);  
-  //      }
-  //      if (s && w) {
-  //        sf.lineFromVectors(sVec.copy(), wVec.copy(), true);  
-  //      }
-  //      if (n && e && s && w) {
-  //        sf.circleFromVector(new PVector(this.buffer + (x) * this.cellSide + this.cellSide/2, this.buffer + (y) * this.cellSide + this.cellSide/2), 5f, true, random(1) > 0.5);  
-  //      }
-  //    }
-  //  }
-  //}
   
 }

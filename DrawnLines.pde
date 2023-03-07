@@ -1,5 +1,6 @@
 float rotateAngle = 0;  
 float noiseScale = 0.05;
+Matrix mat;
 
 ShapesFactory sf;
 
@@ -31,17 +32,24 @@ void setup() {
   //    sf.lineFromVectors(new PVector(x1, y1), new PVector(x2, y2), true);   
   //}
   //sf.ellipseFromVector(new PVector(), 20f, 50f, false, true);
-  Matrix mat = new Matrix(50);
+  mat = new Matrix(50);
   //mat.seed();
   //mat.draw(sf);
   mat.seedPath();
-  mat.draw(sf);
 }
 
 void draw() {
   push();
   //translate(width/2, height/2);
   //rotate(radians(rotateAngle += 0.2));
+  //System.out.println(frameCount);
+  if (frameCount % 10 == 0) {
+    fill(240, 10);
+    rect(0, 0, width, height);
+  }
+  
+
+  mat.step(sf);
   sf.draw();
   pop();
 }
