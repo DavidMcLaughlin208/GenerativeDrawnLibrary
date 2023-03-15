@@ -22,6 +22,7 @@ public class Matrix {
   HashMap<Direction, PVector> neighborOffset = new HashMap<Direction, PVector>();
   HashMap<Direction, Direction> neighborDirection = new HashMap<Direction, Direction>();
   private ArrayList<Direction> dirList = new ArrayList<Direction>();
+  ArrayList<Cell> seenCells = new ArrayList<Cell>();
   
   public Matrix(int cellLength) {
       this.cellSide = cellLength;
@@ -66,13 +67,21 @@ public class Matrix {
   }
   
   public Cell get(int x, int y) {
-    if (y >= 0 && y < this.matrix.size()) {
-      ArrayList<Cell> row = this.matrix.get(y);
-      if (x >= 0 && x < row.size()) {
-        return row.get(x);  
-      }
+    int matrixY = y;
+    int matrixX = x;
+    if (y < 0) {
+      matrixY += this.matrix.size();
     }
-    return null;
+    if (y >= this.matrix.size()) {
+      matrixY -= this.matrix.size();  
+    }
+    if (x < 0) {
+      matrixX += this.matrix.get(0).size();
+    }
+    if (x >= this.matrix.get(0).size()) {
+      matrixX -= this.matrix.get(0).size();  
+    }
+    return this.matrix.get(matrixY).get(matrixX);
   }
   
     public Direction getRandomDirection() {
@@ -139,9 +148,10 @@ public class Matrix {
       this.connections.put(entryPoint, connectionList);
       for (Direction dir : connectionList) {
         Cell neighboringCell = this.getNeighboringCell(dir);
-        if (neighboringCell != null) {
-          cellsToPropagateNext.put(neighboringCell, getNeighborEntryPoint(dir));  
-        }
+        //if (seenCells.indexOf(neighboringCell) == -1) {
+          cellsToPropagateNext.put(neighboringCell, getNeighborEntryPoint(dir));
+          //seenCells.add(neighboringCell);
+        //}
       }
     }
     

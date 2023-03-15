@@ -58,7 +58,7 @@ public class DrawnEllipse extends Drawable {
       localLerpVal = 0.0;
       while (localLerpVal < 1.0) {
         float x1 = lerp(this.pos.x - xRadius, this.pos.x + xRadius, localLerpVal);
-        float x2 = lerp(this.pos.x - xRadius, this.pos.x + xRadius, localLerpVal + localLerpValIncrease);
+        float x2 = lerp(this.pos.x - xRadius, this.pos.x + xRadius, Math.min(localLerpVal + localLerpValIncrease, 1.0));
         if (ellipseContainsPoint((int) x1, y)) {
           drawnLine(x1, y, x2, y);
         }

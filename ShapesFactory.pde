@@ -20,6 +20,11 @@ public class ShapesFactory {
     shapes.add(ellipse);
   }
   
+  public void spiralFromVector(PVector pos, float maxRadius, float increments, boolean animated, boolean oscillate) {
+    DrawnSpiral spiral = new DrawnSpiral(pos, maxRadius, increments, animated, oscillate);
+    shapes.add(spiral);
+  }
+  
   public void draw() {
     //lines.stream().forEach(line -> {
     //  if (!line.completed) {

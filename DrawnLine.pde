@@ -17,9 +17,9 @@ public class DrawnLine extends Drawable {
         this.completed = true;
       } else {
         float x1 = lerp(this.start.x, this.end.x, lerpVal);
-        float x2 = lerp(this.start.x, this.end.x, lerpVal + lerpValIncrease);
+        float x2 = lerp(this.start.x, this.end.x, Math.min(lerpVal + lerpValIncrease, 1.0));
         float y1 = lerp(this.start.y, this.end.y, lerpVal);
-        float y2 = lerp(this.start.y, this.end.y, lerpVal + lerpValIncrease);
+        float y2 = lerp(this.start.y, this.end.y, Math.min(lerpVal + lerpValIncrease, 1.0));
         drawnLine(x1, y1, x2, y2);
         this.lerpVal += lerpValIncrease;
         if (this.lerpVal >= 1.0) {
