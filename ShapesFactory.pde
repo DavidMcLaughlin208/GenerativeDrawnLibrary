@@ -5,23 +5,31 @@ public class ShapesFactory {
   
   public ShapesFactory() {}
   
-  public void lineFromVectors(PVector start, PVector end, boolean animated) {
+  public void line(PVector start, PVector end, boolean animated) {
     DrawnLine line = new DrawnLine(start, end, animated);
     shapes.add(line);
   }
   
-  public void circleFromVector(PVector pos, float radius, boolean animated, boolean shaded) {
+  public void circle(PVector pos, float radius, boolean animated, boolean shaded) {
     DrawnEllipse circle = new DrawnEllipse(pos, radius, animated, shaded);
     shapes.add(circle);
+    if (shaded) {
+      shapes.add(new DrawnSpiral(pos, radius, radius, 0.01, animated, false));  
+    } 
   }
   
-  public void ellipseFromVector(PVector pos, float xRadius, float yRadius, boolean animated, boolean shaded) {
+  public void ellipse(PVector pos, float xRadius, float yRadius, boolean animated, boolean shaded) {
     DrawnEllipse ellipse = new DrawnEllipse(pos, xRadius, yRadius, animated, shaded);
     shapes.add(ellipse);
   }
   
-  public void spiralFromVector(PVector pos, float maxRadius, float increments, boolean animated, boolean oscillate) {
-    DrawnSpiral spiral = new DrawnSpiral(pos, maxRadius, increments, animated, oscillate);
+  public void spiral(PVector pos, float maxRadius, float increments, boolean animated, boolean oscillate) {
+    DrawnSpiral spiral = new DrawnSpiral(pos, maxRadius, maxRadius, increments, animated, oscillate);
+    shapes.add(spiral);
+  }
+  
+  public void ovalSpiral(PVector pos, float xMaxRadius, float yMaxRadius, float increments, boolean animated, boolean oscillate) {
+    DrawnSpiral spiral = new DrawnSpiral(pos, xMaxRadius, yMaxRadius, increments, animated, oscillate);
     shapes.add(spiral);
   }
   

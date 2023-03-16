@@ -70,9 +70,10 @@ void setup() {
   origins.add(new PVector(0, height));
   origins.add(new PVector(width/2, height/2));
   for (PVector origin : origins) {
-    sf.spiralFromVector(origin.copy(), radius, 0.12, true, false);
+    sf.ovalSpiral(origin.copy(), radius, radius, 0.12, true, false);
+    sf.circle(origin.copy(), radius, true, true);
     for (int i = 0; i < 7; i++) {
-      sf.circleFromVector(origin.copy(), radius + (i * i * 5), true, false);
+      sf.circle(origin.copy(), radius + (i * i * 5), true, false);
     }
     
     for (int angle = 0; angle <= 360; angle += 10) {
@@ -80,21 +81,21 @@ void setup() {
         int y1 = (int) (((radius + (6*6*5)) * sin(radians(angle))) + origin.y);
         int x2 = (int) ((radius * cos(radians(angle))) + origin.x);
         int y2 = (int) ((radius * sin(radians(angle))) + origin.y);
-        sf.lineFromVectors(new PVector(x1, y1), new PVector(x2, y2), true);   
+        sf.line(new PVector(x1, y1), new PVector(x2, y2), true);   
     }
   }
-  sf.lineFromVectors(new PVector(0, height/2), new PVector(width/6, height/2), true);
+  sf.line(new PVector(0, height/2), new PVector(width/6, height/2), true);
   
-  sf.lineFromVectors(new PVector(width/6, height/2), new PVector(width/3, height/16), true);
-  sf.lineFromVectors(new PVector(width/6, height/2), new PVector(width/3, height - height/16), true);
+  sf.line(new PVector(width/6, height/2), new PVector(width/3, height/16), true);
+  sf.line(new PVector(width/6, height/2), new PVector(width/3, height - height/16), true);
   
-  sf.lineFromVectors(new PVector(width/3, height/16), new PVector(width - width/3, height/16),  true);
-  sf.lineFromVectors(new PVector(width/3, height - height/16), new PVector(width - width/3, height - height/16), true);
+  sf.line(new PVector(width/3, height/16), new PVector(width - width/3, height/16),  true);
+  sf.line(new PVector(width/3, height - height/16), new PVector(width - width/3, height - height/16), true);
   
-  sf.lineFromVectors(new PVector(width - width/6, height/2), new PVector(width - width/3, height/16), true);
-  sf.lineFromVectors(new PVector(width - width/6, height/2), new PVector(width - width/3, height - height/16), true);
+  sf.line(new PVector(width - width/6, height/2), new PVector(width - width/3, height/16), true);
+  sf.line(new PVector(width - width/6, height/2), new PVector(width - width/3, height - height/16), true);
   
-  sf.lineFromVectors(new PVector(width - width/6, height/2), new PVector(width, height/2), true);
+  sf.line(new PVector(width - width/6, height/2), new PVector(width, height/2), true);
   
   /////////////////////
   
@@ -141,11 +142,11 @@ void pullCircs() {
       PackedCircle circ = circles.get(0);
       circles.remove(0);
       if (circ.radius > 30) {
-        sf.spiralFromVector(circ.pos, circ.radius, 0.1, true, true);
+        sf.spiral(circ.pos, circ.radius, 0.1, true, true);
       } else if (circ.radius > 10) {
-        sf.circleFromVector(circ.pos, circ.radius, true, false);
+        sf.circle(circ.pos, circ.radius, true, false);
       } else {
-        sf.circleFromVector(circ.pos, circ.radius, true, true);  
+        sf.circle(circ.pos, circ.radius, true, true);  
       }
     }
   }  

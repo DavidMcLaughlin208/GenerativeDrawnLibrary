@@ -176,7 +176,7 @@ public class Matrix {
       for (Direction dir : cell.connections.keySet()) {
         ArrayList<Direction> connex = cell.connections.get(dir);
         for (Direction connectingDir : connex) {
-          sf.lineFromVectors(cell.directions.get(dir), cell.directions.get(connectingDir), true);  
+          sf.line(cell.directions.get(dir), cell.directions.get(connectingDir), true);  
         }
       }
     }

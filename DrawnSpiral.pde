@@ -12,15 +12,21 @@ public class DrawnSpiral extends Drawable {
   private float rotationAngle = 0.0;
   private int stepsPerFrame; 
   
-  public DrawnSpiral(PVector pos, float maxRadius, float increments, boolean animated, boolean oscillate) {
+  public DrawnSpiral(PVector pos, float xMaxRadius, float yMaxRadius, float increments, boolean animated, boolean oscillate) {
     this.pos = pos;
     this.xRadius = 0;
     this.yRadius = 0;
-    this.xMaxRadius = maxRadius;
-    this.yMaxRadius = 100;
+    this.xMaxRadius = xMaxRadius;
+    this.yMaxRadius = yMaxRadius;
     this.animated = animated;
-    this.xIncrements = increments;
-    this.yIncrements = this.yMaxRadius * (this.xIncrements/this.xMaxRadius);
+    if (xMaxRadius >= yMaxRadius) {
+      this.xIncrements = increments;
+      this.yIncrements = this.yMaxRadius * (this.xIncrements/this.xMaxRadius);  
+    } else {
+      this.yIncrements = increments; 
+      this.xIncrements = this.xMaxRadius * (this.yIncrements/this.yMaxRadius);;
+    }
+    
     this.oscillate = oscillate;
     int stepsToComplete = (int) (this.xMaxRadius / increments);
     this.stepsPerFrame = (int) ((float) stepsToComplete * this.lerpValIncrease);
