@@ -32,9 +32,9 @@ public class DrawnEllipse extends Drawable {
   
   private void step() {
     drawSegment();
-    if (this.shaded) {
-      drawShadeSegment();  
-    }
+    //if (this.shaded) {
+    //  drawShadeSegment();  
+    //}
     this.lerpVal += this.lerpValIncrease;
     if (this.lerpVal >= 1.0) {
       this.completed = true;  

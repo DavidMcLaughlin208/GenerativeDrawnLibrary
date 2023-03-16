@@ -70,7 +70,7 @@ void setup() {
   origins.add(new PVector(0, height));
   origins.add(new PVector(width/2, height/2));
   for (PVector origin : origins) {
-    sf.spiralFromVector(origin.copy(), radius, 0.12, false, true);
+    sf.spiralFromVector(origin.copy(), radius, 0.12, true, false);
     for (int i = 0; i < 7; i++) {
       sf.circleFromVector(origin.copy(), radius + (i * i * 5), true, false);
     }
